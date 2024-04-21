@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="locationInput" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="searchButton" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="image" src="" alt="">
+            <h1 id="city-name"></h1>
+            <h3 id="temperature"></h3>
+            <h1 id="description" class="lead"></h1>
+
+            <script>
+                const apiKey = '8a572137ed81c017cd0d44a2fe014b36';
+                const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
+                const locationInput = document.getElementById('locationInput');
+                const searchButton = document.getElementById('searchButton');
+
+                searchButton.addEventListener('click', () => {
+                    const location = locationInput.value;
+                    if (location) {
+                        fetchWeather(location);
+                    }
+                });
+
+                function fetchWeather(location) {
+                        const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`;
+
+                         fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            const locationElement = data.name;
+                            const temperatureElement = `${data.main.temp}°C`;
+                            const description = data.weather[0].description;
+                            document.getElementById('city-name').innerText = locationElement;
+                            document.getElementById('temperature').innerText = temperatureElement;
+                            document.getElementById('description').innerText = description;
+                            console.log(data);
+                            const imgUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+                            document.getElementById('image').src = imgUrl ;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching weather data:', error);
+                        });
+                }
+                
+            </script>
+        </div>
+    </div>
+
+</body>
+
+</html>
